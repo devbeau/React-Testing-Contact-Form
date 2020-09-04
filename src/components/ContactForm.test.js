@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, act } from "@testing-library/react";
+import { render, fireEvent, act, wait, waitFor} from "@testing-library/react";
 import ContactForm from './ContactForm'
 
 test('renders without crashing', ()=> {
@@ -10,8 +10,8 @@ test('renders without crashing', ()=> {
     
 })
 
-test('Form works correctly', () => {
-    const {getByLabelText, getByTestId, findByText} = render(<ContactForm />)
+test('Form works correctly', async () => {
+    const {getByLabelText, getByTestId, findByTestId} = render(<ContactForm />)
 
     const User = {
         firstName: "Beau",
@@ -28,14 +28,25 @@ test('Form works correctly', () => {
 
 
     fireEvent.change(firstName, {target:{value: User.firstName}});
+    
     fireEvent.change(lastName, {target:{value: User.lastName}});
     fireEvent.change(email, {target:{value: User.email}});
     fireEvent.change(message, {target:{value: User.message}});
 
-    act(() => {
+    expect(firstName.value).toBe(User.firstName);
+    expect(lastName.value).toBe(User.lastName);
+    expect(email.value).toBe(User.email);
+    expect(message.value).toBe(User.message);
+
+    await act(async () => {
         fireEvent.click(submit);
     })
-
-    findByText(JSON.stringify(User));
+    expect((await findByTestId('userobj'))).toBeInTheDocument();
+    // expect(findByTestId('userobj')).textContent.tobe()
+    // waitFor(() => {
+    //     fireEvent.click(submit);
+    // })
+    // expect(findByTestId('userobj').textContent).toBe(JSON.stringify(User));
+    // findByText(JSON.stringify(User));
 })
 

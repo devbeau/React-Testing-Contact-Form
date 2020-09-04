@@ -53,7 +53,7 @@ const ContactForm = () => {
           <textarea name="message" ref={register({ required: false })} aria-labelledby='message-label'/>
         </div>
         {data && (
-          <pre style={{ textAlign: "left", color: "white" }}>
+          <pre style={{ textAlign: "left", color: "white" }} data-testid='userobj'>
             {JSON.stringify(data, null, 2)}
             
           </pre>
